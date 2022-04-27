@@ -1,0 +1,158 @@
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h1>Buyurtmalar ro'yhati</h1>
+
+</div>
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Umumiy buyurtmalar soni: {{checkout.length}}</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-responsive-md">
+                <thead>
+                    <tr>
+                        <th class="width80">#</th>
+                        <th>Buyurtmachi</th>
+                        <th>Vaqti</th>
+                        <th>Buyurtma</th>
+                        <th>Umumiy hisob</th>
+                        <th>Holati</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each checkout}}
+                    <tr>
+                        <td><strong>{{index}}</strong></td>
+                        <td>{{name}} {{lname}}</td>
+                        <td>{{createdAt}}</td>
+                        <td>{{{products}}}</td>
+                        <td>{{summa}} so'm</td>
+                        <td>
+                            {{{status}}}
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-success light sharp" data-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24"></rect>
+                                            <circle fill="#000000" cx="5" cy="12" r="2"></circle>
+                                            <circle fill="#000000" cx="12" cy="12" r="2"></circle>
+                                            <circle fill="#000000" cx="19" cy="12" r="2"></circle>
+                                        </g>
+                                    </svg>
+                                </button>
+                                <div class="dropdown-menu" x-placement="top-start"
+                                    style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 0px, 0px);">
+                                    <a class="dropdown-item" 
+                                    onclick="getcheckout('{{_id}}')"
+                                    data-toggle="modal" data-target="#upCheckout"
+                                    >Tahrirlash</a>
+                                    <a class="dropdown-item" href="/checkout/delete/{{_id}}" onclick="return confirm('Qaroringiz qat`iymi?')">O'chirish</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newCheckout" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yangi bo'lim</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="newcheckout">
+                    <div class="form-group">
+                        <input type="text" name="title" class="form-control input-default "
+                            placeholder="Bo'lim sarlavhasi">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" name="order" class="form-control input-default "
+                            placeholder="Tartib raqami">
+                    </div>
+                    <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                        <input type="checkbox" class="custom-control-input" checked="" name="status" id="status"
+                            value="1">
+                        <label class="custom-control-label" for="status">Aktiv</label>
+                    </div>
+                    <button class="btn btn-success">Kiritish</button>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="upCheckout" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buyurtmani tahrirlash</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 id="phone"></h4>
+                <form name="upcheckout" action="/checkout/save" method="post">
+                    <input type="hidden" name="_id">
+                    <div class="form-group">
+                        <select name="status" class="form-control default-select ">
+                            <option value="0">Ko'rib chiqilmadi</option>
+                            <option value="1">Qabul qilindi</option>
+                            <option value="2">Yetkazib berildi</option>
+                            <option value="3">Bekor qilindi</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success">Saqlash</button>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let newcheckout = document.forms.newcheckout
+    newcheckout.addEventListener('submit', (e) => {
+        e.preventDefault()
+        let data = {}
+        let formData = new FormData(newcheckout)
+        formData.forEach((value, name) => {
+            data[name] = value
+        })
+        addData(data, 'checkout')
+    })
+
+    {{!-- let upcheckout = document.forms.upcheckout
+    upcheckout.addEventListener('submit', (e) => {
+        e.preventDefault()
+        
+    }) --}}
+
+    function getcheckout(id){
+        fetch(`/checkout/${id}`)
+        .then(res => res.json())
+        .then(checkout => {
+            upcheckout.status.value = checkout.status
+            upcheckout._id.value = checkout._id
+            document.getElementById('phone').innerHTML = `Buyurtmachi: ${checkout.name} ${checkout.lname} <br> Telefon raqami: ${checkout.phone}`
+        })
+    }
+
+</script>

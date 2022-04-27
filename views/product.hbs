@@ -1,0 +1,400 @@
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h1>{{title}}</h1>
+    <button class="btn btn-success" data-toggle="modal" data-target="#newCategory">Yangi</button>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-responsive-md">
+                <thead>
+                    <tr>
+                        <th class="width80">#</th>
+                        <th>Nomi</th>
+                        <th>Turi</th>
+                        <th>Narhi</th>
+                        <th>Holati</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each product}}
+                    <tr>
+                        <td><strong>{{index}}</strong></td>
+                        <td>
+                            {{title}}
+                        </td>
+                        <td>{{category.title}}</td>
+                        <td>{{price}}</td>
+                        <td>
+                            {{{status}}}
+                        </td>
+                        <td class="d-flex text-right">
+                            <a href="/product/view/{{_id}}" class="btn btn-primary light sharp mr-2">
+                                <i class="flaticon-381-search-1"></i>
+                            </a>
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-success light sharp" data-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24"></rect>
+                                            <circle fill="#000000" cx="5" cy="12" r="2"></circle>
+                                            <circle fill="#000000" cx="12" cy="12" r="2"></circle>
+                                            <circle fill="#000000" cx="19" cy="12" r="2"></circle>
+                                        </g>
+                                    </svg>
+                                </button>
+                                <div class="dropdown-menu" x-placement="top-start"
+                                    style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 0px, 0px);">
+                                    <a class="dropdown-item" 
+                                    onclick="get('{{_id}}')"
+                                    data-toggle="modal" data-target="#upProduct"
+                                    >Tahrirlash</a>
+                                    <a class="dropdown-item" href="/product/delete/{{_id}}" onclick="return confirm('Qaroringiz qat`iymi?')">O'chirish</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newCategory" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yangi</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="newproduct" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="text" name="title" class="form-control input-default "
+                                    placeholder="Yangilik sarlavhasi">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <select name="product" class="form-control default-select ">
+                                    {{#each category}}
+                                    <option value="{{_id}}">{{title}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="number" name="price" class="form-control input-default "
+                                    placeholder="Narhi">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="number" name="sale" class="form-control input-default "
+                                    placeholder="Chegirma %">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="text" name="author" class="form-control input-default"
+                                    placeholder="Muallifi">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="number" name="year" class="form-control input-default "
+                                    placeholder="Chop etilgan yili">
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                    <input type="hidden" name="atributs" id="atributs">
+                    <div class="row getatr">
+                        {{#each atribut}}
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <input type="text" data-id="{{_id}}" class="form-control input-default "
+                                        placeholder="{{title}}">
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                    <div class="form-group">
+                        <label>Yangilik qisqa matni</label>
+                        <textarea class="form-control" rows="4" name="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Yangilik matni</label>
+                        <textarea class="form-control" rows="8" name="text"></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="icon" class="form-label">Rasmi</label>
+                        <input class="form-control" type="file" id="icon" multiple name="img" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input" checked="" name="status" id="status"
+                                value="1">
+                            <label class="custom-control-label" for="status">Aktiv</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input"  name="cheap" id="cheap"
+                                value="1">
+                            <label class="custom-control-label" for="cheap">Hamyonbop</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input"  name="popular" id="popular"
+                                value="1">
+                            <label class="custom-control-label" for="popular">Mashhur</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input"  name="recom" id="recom"
+                                value="1">
+                            <label class="custom-control-label" for="recom">Taklif etamiz</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input"  name="soon" id="soon"
+                                value="1">
+                            <label class="custom-control-label" for="soon">Tez kunda</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select name="delivery" class="form-control default-select ">
+                            <option value="0">Bepul yetkazish</option>
+                            <option value="1">Toshkent ichida 10 000 so'm. Respublika bo'ylab 35 000 so'm</option>
+                            <option value="2">Toshkent ichida 20 000 so'm. Respublika bo'ylab 55 000 so'm</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success">Kiritish</button>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="upProduct" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yangi</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="upproduct" enctype="multipart/form-data">
+                    <input type="hidden" name="_id">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="text" name="title" class="form-control input-default "
+                                    placeholder="Yangilik sarlavhasi">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <select name="category" class="form-control default-select ">
+                                    {{#each category}}
+                                    <option value="{{_id}}">{{title}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="number" name="price" class="form-control input-default "
+                                    placeholder="Narhi">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="number" name="sale" class="form-control input-default "
+                                    placeholder="Chegirma %">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="text" name="author" class="form-control input-default"
+                                    placeholder="Muallifi">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="number" name="year" class="form-control input-default "
+                                    placeholder="Chop etilgan yili">
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                    <input type="hidden" name="atributs" id="atributs1">
+                    <div class="row setatr">
+                        {{#each atribut}}
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <input type="text" name="{{_id}}" data-id="{{_id}}" class="form-control input-default "
+                                        placeholder="{{title}}">
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                    <div class="form-group">
+                        <label>Yangilik qisqa matni</label>
+                        <textarea class="form-control" rows="4" name="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Yangilik matni</label>
+                        <textarea class="form-control" rows="8" name="text"></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="icon" class="form-label">Rasmi</label>
+                        <input class="form-control" type="file" id="icon" multiple name="img">
+                    </div>
+                    <div class="d-flex showimgs mb-3">
+
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input" checked="" name="status" id="status1"
+                                value="1">
+                            <label class="custom-control-label" for="status1">Aktiv</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input"  name="cheap" id="cheap1"
+                                value="1">
+                            <label class="custom-control-label" for="cheap1">Hamyonbop</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input"  name="popular" id="popular1"
+                                value="1">
+                            <label class="custom-control-label" for="popular1">Mashhur</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input"  name="recom" id="recom1"
+                                value="1">
+                            <label class="custom-control-label" for="recom1">Taklif etamiz</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-3 checkbox-warning">
+                            <input type="checkbox" class="custom-control-input"  name="soon" id="soon1"
+                                value="1">
+                            <label class="custom-control-label" for="soon1">Tez kunda</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select name="delivery" class="form-control default-select ">
+                            <option value="0">Bepul yetkazish</option>
+                            <option value="1">Toshkent ichida 10 000 so'm. Respublika bo'ylab 35 000 so'm</option>
+                            <option value="2">Toshkent ichida 20 000 so'm. Respublika bo'ylab 55 000 so'm</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success">Kiritish</button>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let newproduct = document.forms.newproduct
+    newproduct.addEventListener('submit',(e)=>{
+        let atrs = document.querySelectorAll('.getatr input')
+        let arr = []
+        atrs.forEach(input=>{
+            if (input.value){
+                arr.push({
+                    atribut: input.getAttribute('data-id'),
+                    value: input.value
+                })
+            }
+        })
+        document.getElementById('atributs').value = JSON.stringify(arr)
+        e.preventDefault()
+        let formData = new FormData(newproduct)
+        fetch('/product',{
+            method:'post',
+            body:formData,
+        }).then(res=>res.json())
+        .then(data=>{
+            console.log(data)
+            location.reload()
+        })
+    })
+
+
+
+    let upproduct = document.forms.upproduct
+    upproduct.addEventListener('submit', (e) => {
+        e.preventDefault()
+        let atrs = document.querySelectorAll('.setatr input')
+        let arr = []
+        atrs.forEach(input=>{
+            if (input.value){
+                arr.push({
+                    atribut: input.getAttribute('data-id'),
+                    value: input.value
+                })
+            }
+        })
+        let data = {}
+        document.getElementById('atributs1').value = JSON.stringify(arr)
+        let formData = new FormData(upproduct)
+        fetch(`/product/save`,{
+            method:'post',
+            body:formData
+        }).then(res=>res.json())
+        .then(newData => {
+            if (newData == 'ok'){
+                location.reload()
+            } else {
+                console.log(newData)
+            }
+        })
+    })
+
+    function get(id){
+    fetch(`/product/${id}`)
+    .then(res=>res.json())
+    .then(data => {
+        if (data !=='error'){
+            let formName = document.forms.upproduct
+            formName.title.value = data.title
+            formName._id.value = data._id
+            formName.text.value = data.text
+            formName.price.value = data.price
+            formName.sale.value = data.sale
+            formName.delivery.value = data.delivery
+            formName.description.value = data.description
+            formName.category.value = data.category
+            formName.author.value = data.author
+            formName.year.value = data.year
+            formName.status.checked = data.status == 0 ? false : true
+            formName.cheap.checked = data.cheap == 0 ? false : true
+            formName.popular.checked = data.popular == 0 ? false : true
+            formName.recom.checked = data.recom == 0 ? false : true
+            formName.soon.checked = data.soon == 0 ? false : true
+            
+            data.atributs.forEach(atribut => {
+                formName[atribut.atribut].value = atribut.value
+            })
+            let showimg = document.querySelector('.showimgs')
+            data.img.forEach(img => {
+                showimg.innerHTML+=`<img src=${img} height='50'/>`
+            })
+        }
+    })
+}
+</script>
